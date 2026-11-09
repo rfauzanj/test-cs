@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            label1 = new Label();
-            label2 = new Label();
-            label3 = new Label();
             cek = new Button();
             lblTotalNG = new Label();
             ngHarian = new Label();
@@ -41,41 +38,15 @@
             prgSuhu = new ProgressBar();
             lblSuhu = new Label();
             btnExport = new Button();
+            GroupBox1 = new GroupBox();
+            cmbModel = new ComboBox();
+            flowPanelItem = new FlowLayoutPanel();
+            GroupBox1.SuspendLayout();
             SuspendLayout();
-            // 
-            // label1
-            // 
-            label1.Location = new Point(26, 48);
-            label1.Name = "label1";
-            label1.Size = new Size(100, 23);
-            label1.TabIndex = 2;
-            label1.Text = "item1";
-            label1.TextAlign = ContentAlignment.MiddleCenter;
-            label1.Click += label1_Click;
-            // 
-            // label2
-            // 
-            label2.Location = new Point(132, 48);
-            label2.Name = "label2";
-            label2.Size = new Size(100, 23);
-            label2.TabIndex = 3;
-            label2.Text = "item2";
-            label2.TextAlign = ContentAlignment.MiddleCenter;
-            label2.Click += label2_Click;
-            // 
-            // label3
-            // 
-            label3.Location = new Point(238, 48);
-            label3.Name = "label3";
-            label3.Size = new Size(100, 23);
-            label3.TabIndex = 4;
-            label3.Text = "item3";
-            label3.TextAlign = ContentAlignment.MiddleCenter;
-            label3.Click += label3_Click;
             // 
             // cek
             // 
-            cek.Location = new Point(26, 149);
+            cek.Location = new Point(25, 202);
             cek.Name = "cek";
             cek.Size = new Size(75, 23);
             cek.TabIndex = 5;
@@ -115,7 +86,7 @@
             // 
             // chkAuto
             // 
-            chkAuto.Location = new Point(128, 149);
+            chkAuto.Location = new Point(127, 202);
             chkAuto.Name = "chkAuto";
             chkAuto.Size = new Size(104, 24);
             chkAuto.TabIndex = 0;
@@ -124,7 +95,7 @@
             // 
             // prgSuhu
             // 
-            prgSuhu.Location = new Point(227, 150);
+            prgSuhu.Location = new Point(226, 203);
             prgSuhu.Name = "prgSuhu";
             prgSuhu.Size = new Size(100, 23);
             prgSuhu.TabIndex = 11;
@@ -132,7 +103,7 @@
             // lblSuhu
             // 
             lblSuhu.AutoSize = true;
-            lblSuhu.Location = new Point(227, 131);
+            lblSuhu.Location = new Point(226, 184);
             lblSuhu.Name = "lblSuhu";
             lblSuhu.Size = new Size(94, 15);
             lblSuhu.TabIndex = 12;
@@ -148,11 +119,43 @@
             btnExport.UseVisualStyleBackColor = true;
             btnExport.Click += btnExport_Click;
             // 
+            // GroupBox1
+            // 
+            GroupBox1.Controls.Add(flowPanelItem);
+            GroupBox1.Location = new Point(26, 66);
+            GroupBox1.Name = "GroupBox1";
+            GroupBox1.Size = new Size(312, 115);
+            GroupBox1.TabIndex = 14;
+            GroupBox1.TabStop = false;
+            GroupBox1.Text = "Model 1";
+            // 
+            // cmbModel
+            // 
+            cmbModel.AllowDrop = true;
+            cmbModel.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbModel.FormattingEnabled = true;
+            cmbModel.ImeMode = ImeMode.NoControl;
+            cmbModel.Location = new Point(26, 37);
+            cmbModel.Name = "cmbModel";
+            cmbModel.Size = new Size(121, 23);
+            cmbModel.TabIndex = 15;
+            cmbModel.SelectedIndexChanged += cmbModel_SelectedIndexChanged;
+            // 
+            // flowPanelItem
+            // 
+            flowPanelItem.AutoScroll = true;
+            flowPanelItem.Location = new Point(6, 15);
+            flowPanelItem.Name = "flowPanelItem";
+            flowPanelItem.Size = new Size(294, 94);
+            flowPanelItem.TabIndex = 16;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(424, 383);
+            Controls.Add(cmbModel);
+            Controls.Add(GroupBox1);
             Controls.Add(btnExport);
             Controls.Add(lblSuhu);
             Controls.Add(prgSuhu);
@@ -161,22 +164,16 @@
             Controls.Add(ngHarian);
             Controls.Add(lblTotalNG);
             Controls.Add(cek);
-            Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            GroupBox1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Label label1;
-        private Label label2;
-        private Label label3;
         private Button cek;
         private Label lblTotalNG;
         private Label ngHarian;
@@ -186,5 +183,8 @@
         private ProgressBar prgSuhu;
         private Label lblSuhu;
         private Button btnExport;
+        private GroupBox GroupBox1;
+        private ComboBox cmbModel;
+        private FlowLayoutPanel flowPanelItem;
     }
 }

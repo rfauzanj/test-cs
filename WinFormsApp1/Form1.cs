@@ -1,10 +1,22 @@
-using System.IO;
+using System.IO.Ports;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 using System.Text.Json;
 
 namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
+        private class ModelData
+        {
+            public string NamaModel { get; set; }
+            public List<bool> ItemStatuses { get; set; } = new List<bool>();
+            public int AkumulasiNgModel { get; set; } = 0;
+        }
+
+        private List<ModelData> daftarModel = new List<ModelData>();
+        private int modelAktifIndex = 0;
         int akumulasiNg = 0;
 
         public Form1()
@@ -14,70 +26,95 @@ namespace WinFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label1.BackColor = Color.Green;
-            label2.BackColor = Color.Green;
-            label3.BackColor = Color.Green;
+            var model1 = new ModelData { NamaModel = "Model A-01 (4 item)" };
+            for (int i = 0; i < 4; i++) model1.ItemStatuses.Add(true);
+            daftarModel.Add(model1);
+
+            var model2 = new ModelData { NamaModel = "Model B-02 (6 item)" };
+            for (int i = 0; i < 6; i++) model2.ItemStatuses.Add(true);
+            daftarModel.Add(model2);
+
+            var model3 = new ModelData { NamaModel = "Model C-03 (10 item)" };
+            for (int i = 0; i < 10; i++) model3.ItemStatuses.Add(true);
+            daftarModel.Add(model3);
+
+            cmbModel.Items.Clear();
+            foreach (var model in daftarModel)
+            {
+                cmbModel.Items.Add(model.NamaModel);
+            }
+
+            cmbModel.SelectedIndex = 0;
+
+            MuatTampilanModelAktif();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void MuatTampilanModelAktif()
         {
-            if (label1.BackColor == Color.Green)
+            var model = daftarModel[modelAktifIndex];
+            GroupBox1.Text = model.NamaModel;
+
+            flowPanelItem.Controls.Clear();
+
+            for (int i = 0; i < model.ItemStatuses.Count; i++)
             {
-                label1.BackColor = Color.Red;
+                Label lblItem = new Label();
+                lblItem.Name = $"lblItem_{i}";
+                lblItem.Text = $"Item {i + 1}";
+                lblItem.Width = 60;
+                lblItem.Height = 30;
+                lblItem.TextAlign = ContentAlignment.MiddleCenter;
+                lblItem.Font = new Font(this.Font, FontStyle.Bold);
+
+                lblItem.BackColor = model.ItemStatuses[i] ? Color.Green : Color.Red;
+
+                lblItem.Tag = i;
+
+                lblItem.Click += LblItem_Click;
+                flowPanelItem.Controls.Add(lblItem);
             }
-            else
-            {
-                label1.BackColor = Color.Green;
-            }
+            lblTotalNG.Text = $"TOTAL NG = ({model.NamaModel}) = 0";
         }
 
-        private void label2_Click(object sender, EventArgs e)
+        private void LblItem_Click(object sender, EventArgs e)
         {
-            if (label2.BackColor == Color.Green)
-            {
-                label2.BackColor = Color.Red;
-            }
-            else
-            {
-                label2.BackColor = Color.Green;
-            }
+            Label clickedLabel = (Label)sender;
+            int indexItem = (int)clickedLabel.Tag;
+
+            var model = daftarModel[modelAktifIndex];
+
+            model.ItemStatuses[indexItem] = !model.ItemStatuses[indexItem];
+
+            clickedLabel.BackColor = model.ItemStatuses[indexItem] ? Color.Green : Color.Red;
+        }
+        private void cmbModel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            modelAktifIndex = cmbModel.SelectedIndex;
+            MuatTampilanModelAktif();
         }
 
-        private void label3_Click(object sender, EventArgs e)
-        {
-            if (label3.BackColor == Color.Green)
-            {
-                label3.BackColor = Color.Red;
-            }
-            else
-            {
-                label3.BackColor = Color.Green;
-            }
-        }
 
         private void cek_Click(object sender, EventArgs e)
         {
+            var model = daftarModel[modelAktifIndex];
             int jumlahMerah = 0;
 
-            if (label1.BackColor == Color.Red)
+            foreach (var statusOK in model.ItemStatuses)
             {
-                jumlahMerah++;
-                akumulasiNg++;
+                if (!statusOK)
+                {
+                    jumlahMerah++;
+                }
             }
 
-            if (label2.BackColor == Color.Red)
+            if (jumlahMerah > 0)
             {
-                jumlahMerah++;
-                akumulasiNg++;
+                model.AkumulasiNgModel += jumlahMerah;
+                akumulasiNg += jumlahMerah;
             }
 
-            if (label3.BackColor == Color.Red)
-            {
-                jumlahMerah++;
-                akumulasiNg++;
-            }
 
-            lblTotalNG.Text = $"TOTAL NG = {jumlahMerah}";
+            lblTotalNG.Text = $"TOTAL NG = ({model.NamaModel}) = {jumlahMerah}";
             ngHarian.Text = $"TOTAL NG HARIAN = {akumulasiNg}";
 
 
@@ -91,24 +128,11 @@ namespace WinFormsApp1
             //}
 
             string waktuSekarang = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            string status = jumlahMerah == 0 ? "OK" : $"NG ({jumlahMerah})";
 
-            string status;
-            if (jumlahMerah == 0)
-            {
-                status = "OK";
-            }
-            else
-            {
-                status = $"NG ({jumlahMerah})";
-            }
-
-            // format pesan log yang akan dimasukan ke list
             string logMessage = $"[{waktuSekarang}] Pengecekan Selesai - Status: {status}";
             lstRiwayat.Items.Add(logMessage);
-
-            // (Opsional) Membuat ListBox selalu scroll otomatis ke item paling bawah/terbaru
             lstRiwayat.TopIndex = lstRiwayat.Items.Count - 1;
-
         }
         private void chkAuto_CheckedChanged_1(object sender, EventArgs e)
         {
@@ -174,5 +198,7 @@ namespace WinFormsApp1
 
             MessageBox.Show($"File berhasil disimpan dengan nama: {namaFile}", "Export Sukses");
         }
+
+        
     }
 }
